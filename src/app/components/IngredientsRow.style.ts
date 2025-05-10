@@ -1,5 +1,4 @@
-export const IngredientsRowStyle =
-    `
+export const IngredientsRowStyle = `
                         bg-gray-100
                         border-gray-200
                         border-1
@@ -15,4 +14,5 @@ export const IngredientsRowStyle =
                         w-8
                         h-8
                         text-gray-800
-    `
+    `;
+

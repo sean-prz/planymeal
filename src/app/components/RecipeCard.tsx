@@ -9,7 +9,9 @@ import IngredientsRow from "@/app/components/IngredientsRow";
 
 interface RecipeProp {
     recipe: Recipe,
-    setShowTextInput: (state: boolean) => void;
+    selected: boolean,
+    setSelected: (recipe: Recipe) => void,
+    setShowTextInput: (state: boolean) => void
 }
 
 function capitalizeFirstLetter(str: string): string {
@@ -20,7 +22,7 @@ function capitalizeFirstLetter(str: string): string {
 }
 
 
-function RecipeCard({recipe, setShowTextInput} : RecipeProp) {
+function RecipeCard({recipe, selected, setSelected, setShowTextInput,} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     useEffect(() => {
         async function loadIngredients() {
@@ -29,14 +31,14 @@ function RecipeCard({recipe, setShowTextInput} : RecipeProp) {
             setIngredients(ingredients)
         }
         loadIngredients()
-    }, [])
+    }, [selected])
 
     return (
-    <div className={RecipeCardStyle} >
+    <div className={RecipeCardStyle + ((selected) ? "scale-101" : "")  } >
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
             {capitalizeFirstLetter(recipe.title)}
         </h3>
-        <IngredientsRow ingredients={ingredients} setShowTextInput={setShowTextInput}></IngredientsRow>
+        <IngredientsRow ingredients={ingredients} setSelected={setSelected} recipe={recipe} setShowTextInput={setShowTextInput}></IngredientsRow>
     </div>
     );
 }

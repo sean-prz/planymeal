@@ -10,14 +10,23 @@ interface RecipeListProps {
 
 function RecipeList({ recipes }: RecipeListProps) {
     const [showTextInput, _setShowTextInput] = useState(false)
+    const [recipeSelected, _setRecipeSelected] = useState<Recipe | null>(null)
 
     function setShowTextInput(state: boolean): void {
         _setShowTextInput(state)
     }
+    function setRecipeSelected(recipe: Recipe | null) {
+        console.log("Setting recipe")
+        _setRecipeSelected(recipe)
+    }
+
 
     useEffect(() => {
         function handleWindowClick() {
-            if (showTextInput) {_setShowTextInput(false)};
+            if (showTextInput) {
+                _setShowTextInput(false);
+                _setRecipeSelected(null)
+            };
             console.log("clicked")
         }
 
@@ -31,9 +40,9 @@ function RecipeList({ recipes }: RecipeListProps) {
     return (
         <div>
             {recipes.map((recipe) => (
-             <RecipeCard key={recipe.id} recipe={recipe}  setShowTextInput={setShowTextInput}></RecipeCard>
+             <RecipeCard key={recipe.id} recipe={recipe} selected={recipe == recipeSelected} setSelected={setRecipeSelected}  setShowTextInput={setShowTextInput}></RecipeCard>
             ))}
-            {showTextInput ? (<CommandPaletteInput showTextInput={showTextInput}></CommandPaletteInput>) : ( <div></div>)}
+            {showTextInput ? (<CommandPaletteInput showTextInput={showTextInput} setShowTextInput={setShowTextInput} recipe={recipeSelected} setRecipeSelected={setRecipeSelected}></CommandPaletteInput>) : ( <div></div>)}
         </div>
 
 

@@ -2,7 +2,7 @@
 
 import {Ingredient} from "@/types/Ingredient";
 import {IngredientsRowStyle} from "@/app/components/IngredientsRow.style";
-
+import { Recipe } from "@/types/recipe";
 function capitalizeFirstLetter(str: string): string {
     if (!str) {
         return str; // Handle empty string case
@@ -11,10 +11,12 @@ function capitalizeFirstLetter(str: string): string {
 }
 interface prop {
     ingredients: Ingredient[],
+    recipe: Recipe
+    setSelected: (recipe: Recipe) => void 
     setShowTextInput: (state: boolean) => void,
 }
 
-function IngredientsRow({ingredients, setShowTextInput} : prop) {
+function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : prop) {
 
     return (
         <div className="flex flex-row flex-wrap gap-2">
@@ -29,7 +31,7 @@ function IngredientsRow({ingredients, setShowTextInput} : prop) {
             <div>
                 <div
                     className={IngredientsRowStyle}
-                    onClick={(e) =>  {e.stopPropagation(); setShowTextInput(true)}}
+                    onClick={(e) =>  {e.stopPropagation(); setShowTextInput(true); setSelected(recipe)}}
                 >
                     +
                 </div>
