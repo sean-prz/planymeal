@@ -8,7 +8,8 @@ import {RecipeCardStyle} from "@/app/components/RecipeCard.style";
 import IngredientsRow from "@/app/components/IngredientsRow";
 
 interface RecipeProp {
-    recipe: Recipe
+    recipe: Recipe,
+    setShowTextInput: (state: boolean) => void;
 }
 
 function capitalizeFirstLetter(str: string): string {
@@ -19,7 +20,7 @@ function capitalizeFirstLetter(str: string): string {
 }
 
 
-function RecipeCard({recipe} : RecipeProp) {
+function RecipeCard({recipe, setShowTextInput} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     useEffect(() => {
         async function loadIngredients() {
@@ -35,7 +36,7 @@ function RecipeCard({recipe} : RecipeProp) {
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
             {capitalizeFirstLetter(recipe.title)}
         </h3>
-        <IngredientsRow ingredients={ingredients}></IngredientsRow>
+        <IngredientsRow ingredients={ingredients} setShowTextInput={setShowTextInput}></IngredientsRow>
     </div>
     );
 }

@@ -10,14 +10,11 @@ function capitalizeFirstLetter(str: string): string {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 interface prop {
-    ingredients: Ingredient[]
+    ingredients: Ingredient[],
+    setShowTextInput: (state: boolean) => void,
 }
 
-function buttonClick() {
-    console.log("Button clicked")
-}
-
-function IngredientsRow({ingredients} : prop) {
+function IngredientsRow({ingredients, setShowTextInput} : prop) {
 
     return (
         <div className="flex flex-row flex-wrap gap-2">
@@ -32,7 +29,7 @@ function IngredientsRow({ingredients} : prop) {
             <div>
                 <div
                     className={IngredientsRowStyle}
-                    onClick={buttonClick}
+                    onClick={(e) =>  {e.stopPropagation(); setShowTextInput(true)}}
                 >
                     +
                 </div>
