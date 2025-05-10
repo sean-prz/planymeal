@@ -5,6 +5,7 @@ import {RecipesRepository} from "@/types/RecipesRepository";
 import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {Ingredient} from "@/types/Ingredient";
 import {RecipeCardStyle} from "@/app/components/RecipeCard.style";
+import IngredientsRow from "@/app/components/IngredientsRow";
 
 interface RecipeProp {
     recipe: Recipe
@@ -20,8 +21,6 @@ function capitalizeFirstLetter(str: string): string {
 
 function RecipeCard({recipe} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
-    const [showInput, setShowInput] = useState(false);
-    const [newTag, setNewTag] = useState("");
     useEffect(() => {
         async function loadIngredients() {
             const recipeRepository: RecipesRepository = await SupaBaseRecipesRepository.getInstance()
@@ -32,56 +31,12 @@ function RecipeCard({recipe} : RecipeProp) {
     }, [])
 
     return (
-    <div
-        className={RecipeCardStyle}
-    >
+    <div className={RecipeCardStyle} >
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            {recipe.title}
+            {capitalizeFirstLetter(recipe.title)}
         </h3>
-        <div className="flex flex-row flex-wrap gap-2">
-            {ingredients.map((ingredient) => (
-                <div
-                    key={ingredient.id}
-                    className="bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm"
-                >
-                    {capitalizeFirstLetter(ingredient.name)}
-                </div>
-            ))}
-            <div>
-                <div
-                    className="
-                        bg-gray-100
-                        border-gray-200
-                        border-1
-                        rounded-full
-                        px-4
-                        py-2
-                        font-semibold
-                        text-sm
-                        cursor-pointer
-                        flex
-                        items-center
-                        justify-center
-                        w-8
-                        h-8
-                        text-gray-800
-                      "
-                    onClick={() => {
-                        // Handle the action to add a new tag here
-                        setShowInput(true)
-                        console.log("Add tag button clicked");
-
-                    }}
-                >
-                    +
-                </div>
-                
-            </div>
-            
-        </div>
-        <div>{showInput ? ("clicked"): "not clicked"}</div>
+        <IngredientsRow ingredients={ingredients}></IngredientsRow>
     </div>
-
     );
 }
 export default RecipeCard;
