@@ -8,5 +8,6 @@ export interface RecipesRepository {
   removeIngredientToRecipe(recipeID: number, ingredientID: number): Promise<void>
   addRecipe(recipeName: string): Promise<void>
   removeRecipe(recipeID: number): Promise<void>
+  getIngredient(ingredientID: number) : Promise<Ingredient>
 }
 

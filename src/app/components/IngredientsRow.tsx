@@ -3,6 +3,7 @@
 import {Ingredient} from "@/types/Ingredient";
 import {IngredientsRowStyle} from "@/app/components/IngredientsRow.style";
 import { Recipe } from "@/types/recipe";
+import {useRouter} from "next/navigation";
 function capitalizeFirstLetter(str: string): string {
     if (!str) {
         return str; // Handle empty string case
@@ -17,13 +18,15 @@ interface prop {
 }
 
 function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : prop) {
+    const route = useRouter()
 
     return (
         <div className="flex flex-row flex-wrap gap-2">
             {ingredients.map((ingredient) => (
                 <div
                     key={ingredient.id}
-                    className="bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm"
+                    className="bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer"
+                    onClick={() => {route.push(`/ingredient/${ingredient.id}`)}}
                 >
                     {capitalizeFirstLetter(ingredient.name)}
                 </div>

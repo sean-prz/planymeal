@@ -147,4 +147,9 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
         return Promise.resolve(undefined);
     }
 
+    async getIngredient(ingredientID: number): Promise<Ingredient> {
+        const res = await this.supabase.from("ingredients").select().eq("id", ingredientID).single<Pick<Ingredient, 'id'>>()
+        return res.data as Ingredient
+    }
+
 }
