@@ -6,7 +6,7 @@ import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {Ingredient} from "@/types/Ingredient";
 import {RecipeCardStyle} from "@/app/components/RecipeCard.style";
 import IngredientsRow from "@/app/components/IngredientsRow";
-
+import { useRouter } from 'next/navigation';
 interface RecipeProp {
     recipe: Recipe,
     selected: boolean,
@@ -29,6 +29,7 @@ async function removeRecipe(recipe: Recipe) {
 
 function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibility} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
+    const router = useRouter();
     useEffect(() => {
         async function loadIngredients() {
             const recipeRepository: RecipesRepository = await SupaBaseRecipesRepository.getInstance()
@@ -41,7 +42,10 @@ function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibil
     return (
     <div className={RecipeCardStyle + ((selected) ? "scale-101" : "")  } >
         <div className={"flex justify-between"}>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+            <h3
+                className="text-xl cursor-pointer font-semibold text-gray-800 mb-2"
+                onClick={() => router.push(`/recipe/${recipe.id}`) }
+            >
                 {capitalizeFirstLetter(recipe.title)}
             </h3>
             <div className={"text-red-600 cursor-pointer font-bold p-2"}
