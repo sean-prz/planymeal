@@ -6,12 +6,14 @@ import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {Ingredient} from "@/types/Ingredient";
 import {RecipeCardStyle} from "@/app/components/RecipeCard.style";
 import IngredientsRow from "@/app/components/IngredientsRow";
+import recipeList from "@/app/components/RecipeList";
 
 interface RecipeProp {
     recipe: Recipe,
     selected: boolean,
     setSelected: (recipe: Recipe) => void,
-    setShowTextInput: (state: boolean) => void
+    setShowTextInput: (state: boolean) => void,
+    setVisibility: (recipe: Recipe, visible: boolean) => void
 }
 
 function capitalizeFirstLetter(str: string): string {
@@ -20,9 +22,13 @@ function capitalizeFirstLetter(str: string): string {
     }
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
+async function removeRecipe(recipe: Recipe) {
+   const recipeRepository = await SupaBaseRecipesRepository.getInstance()
+   recipeRepository.removeRecipe(recipe.id)
+}
 
 
-function RecipeCard({recipe, selected, setSelected, setShowTextInput,} : RecipeProp) {
+function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibility} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     useEffect(() => {
         async function loadIngredients() {
@@ -38,6 +44,7 @@ function RecipeCard({recipe, selected, setSelected, setShowTextInput,} : RecipeP
         <h3 className="text-xl font-semibold text-gray-800 mb-2">
             {capitalizeFirstLetter(recipe.title)}
         </h3>
+        <div onClick={() => {removeRecipe(recipe);setVisibility(recipe, false)} }>X</div>
         <IngredientsRow ingredients={ingredients} setSelected={setSelected} recipe={recipe} setShowTextInput={setShowTextInput}></IngredientsRow>
     </div>
     );

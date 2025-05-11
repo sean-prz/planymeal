@@ -132,4 +132,19 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
         }
     }
 
+    async addRecipe(recipeName: string): Promise<void> {
+        await this.supabase.from("recipes").insert({title: recipeName})
+        return Promise.resolve(undefined);
+    }
+
+    async removeIngredientToRecipe(recipeID: number, ingredientID: number): Promise<void> {
+        await this.supabase.from("needs_ingredients").delete().eq("recipe_id", recipeID).eq("ingredient_id", ingredientID)
+        return Promise.resolve(undefined);
+    }
+
+    async removeRecipe(recipeID: number): Promise<void> {
+        await this.supabase.from("recipes").delete().eq("id", recipeID)
+        return Promise.resolve(undefined);
+    }
+
 }
