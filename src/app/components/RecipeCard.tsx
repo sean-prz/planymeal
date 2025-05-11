@@ -6,7 +6,6 @@ import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {Ingredient} from "@/types/Ingredient";
 import {RecipeCardStyle} from "@/app/components/RecipeCard.style";
 import IngredientsRow from "@/app/components/IngredientsRow";
-import recipeList from "@/app/components/RecipeList";
 
 interface RecipeProp {
     recipe: Recipe,
@@ -24,7 +23,7 @@ function capitalizeFirstLetter(str: string): string {
 }
 async function removeRecipe(recipe: Recipe) {
    const recipeRepository = await SupaBaseRecipesRepository.getInstance()
-   recipeRepository.removeRecipe(recipe.id)
+   await recipeRepository.removeRecipe(recipe.id)
 }
 
 
