@@ -40,10 +40,14 @@ function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibil
 
     return (
     <div className={RecipeCardStyle + ((selected) ? "scale-101" : "")  } >
-        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-            {capitalizeFirstLetter(recipe.title)}
-        </h3>
-        <div onClick={() => {removeRecipe(recipe);setVisibility(recipe, false)} }>X</div>
+        <div className={"flex justify-between"}>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                {capitalizeFirstLetter(recipe.title)}
+            </h3>
+            <div className={"text-red-600 cursor-pointer font-bold p-2"}
+                onClick={() => {removeRecipe(recipe);setVisibility(recipe, false)} }>x</div>
+        </div>
+
         <IngredientsRow ingredients={ingredients} setSelected={setSelected} recipe={recipe} setShowTextInput={setShowTextInput}></IngredientsRow>
     </div>
     );
