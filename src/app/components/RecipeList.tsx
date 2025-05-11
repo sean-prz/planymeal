@@ -3,9 +3,10 @@
 import { Recipe } from "@/types/recipe";
 import RecipeCard from "./RecipeCard"
 import CommandPaletteInput from "@/app/components/CommandPalette";
-import {useEffect, useRef, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {RecipesRepository} from "@/types/RecipesRepository";
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 interface RecipeListProps {
     recipes: Recipe[];
 }
@@ -15,7 +16,7 @@ function RecipeList({ recipes }: RecipeListProps) {
     const [showTextInput, _setShowTextInput] = useState(false)
     const [showAddRecipe, setShowAddRecipe] = useState(false)
     const [recipeSelected, _setRecipeSelected] = useState<Recipe | null>(null)
-    const inputRef = useRef<HTMLInputElement | null>(null);
+    const inputRef = useRef<HTMLInputElement | null>(null)
 
     function setShowTextInput(state: boolean): void {
         _setShowTextInput(state)
@@ -56,6 +57,12 @@ function RecipeList({ recipes }: RecipeListProps) {
             setRecipeSelected(null)
         }
     }
+    async function handleChange(event:  ChangeEvent<HTMLInputElement>) {
+        const input = event.target.value.toLowerCase()
+        setRecipesVisible(recipes.filter(recipe => recipe.title.includes(input.toLowerCase())))
+        if (input.length == 0) setRecipesVisible(recipes)
+    }
+
 
     useEffect(() => {
         function handleWindowClick() {
@@ -77,8 +84,29 @@ function RecipeList({ recipes }: RecipeListProps) {
 
     return (
         <div>
-            <p className={"bg-gray-200 rounded-xl px-2 m-2 inline-flex cursor-pointer"}
-                onClick={(e) => {e.stopPropagation();  setShowAddRecipe(true)}} >+</p>
+            <div className="flex items-center m-5"> {/* Aligns items vertically in the center */}
+
+      <div className="relative mr-5 w-full"> {/* Relative for absolute positioning of icon */}
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <MagnifyingGlassIcon className="h-5 w-5 text-gray-500" aria-hidden="true" />
+        </div>
+        <input
+          type="text"
+          className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Search recipes..."
+          onChange={handleChange}
+        />
+      </div>
+      <p
+        className="bg-gray-200 rounded-xl px-4 py-2  inline-flex cursor-pointer"
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowAddRecipe(true);
+        }}
+      >
+        +
+      </p>
+    </div>
             {recipesVisible.map((recipe) => (
              <RecipeCard key={recipe.id} recipe={recipe} selected={recipe == recipeSelected} setSelected={setRecipeSelected}  setShowTextInput={setShowTextInput} setVisibility={setVisibility}></RecipeCard>
             ))}
