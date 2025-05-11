@@ -1,17 +1,15 @@
 "use client"
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {RecipesRepository} from "@/types/RecipesRepository";
 import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {Ingredient} from "@/types/Ingredient";
 
 interface IngredientPageProps {
-    params: {
-        ingredientId: number; // This must match the folder name [ingredientId]
-    };
-}
+    params: Promise<{ingredientId: number}>; // This must match the folder name [ingredientId]
+    }
 
  function IngredientPage({ params }: IngredientPageProps) {
-    const {ingredientId} = params;
+    const {ingredientId} = use(params);
     const [ingredient, setIngredient] = useState<Ingredient>()
     useEffect(() => {
         async function loadIngredient(){

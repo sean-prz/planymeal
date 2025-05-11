@@ -1,22 +1,20 @@
 "use client"
 
-import {useEffect, useState} from "react";
+import {use, useEffect, useState} from "react";
 import {Recipe} from "@/types/recipe";
 import {Ingredient} from "@/types/Ingredient";
 import {RecipesRepository} from "@/types/RecipesRepository";
 import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 
 interface RecipePageProps {
-    params: {
-        recipeId: number; // This must match the folder name [ingredientId]
-    };
+    params: Promise<{recipeId : number}>;
 }
 
 
 function IngredientPage({ params }: RecipePageProps) {
     const [recipe, setRecipe] = useState<Recipe>()
     const [ingredients, setIngredients] = useState<Ingredient[]>()
-
+    const { recipeId } = use(params)
 
 
 
@@ -25,7 +23,7 @@ function IngredientPage({ params }: RecipePageProps) {
 
             const recipeRepository: RecipesRepository = await SupaBaseRecipesRepository.getInstance()
             const recipes = await recipeRepository.getRecipes()
-            const recipe = recipes.find(i => i.id == params.recipeId)
+            const recipe = recipes.find(i => i.id == recipeId)
             setRecipe(recipe)
             if (recipe) {
               const ingredients = await recipeRepository.getIngredientsForRecipe(recipe.id)
