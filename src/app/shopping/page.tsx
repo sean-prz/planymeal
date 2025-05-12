@@ -11,8 +11,8 @@ function ShoppingList({}) {
   useEffect(() => {
     async function loadIngredients() {
       const repo = await SupaBaseRecipesRepository.getInstance()
-      const ingredients = await repo.getIngredientsToShop()
-      setIngredients(ingredients)
+      const items = await repo.getIngredientsToShop()
+      setIngredients(items.map(it => it.ingredient))
     }
     loadIngredients() 
     }, [])

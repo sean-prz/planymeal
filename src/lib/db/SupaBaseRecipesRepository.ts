@@ -2,6 +2,7 @@ import { RecipesRepository } from "@/types/RecipesRepository";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Ingredient } from "@/types/Ingredient";
 import { Recipe } from "@/types/recipe";
+import { ShoppingItem } from "@/types/shoppingItem";
 let recipeRepositoryInstance: RecipesRepository | null = null;
 
 interface NeedsIngredient {
@@ -176,15 +177,23 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .from("shopping_card")
       .insert({ ingredient_id: ingredient.id });
   }
-  async getIngredientsToShop(): Promise<Ingredient[]> {
+  async getIngredientsToShop(): Promise<ShoppingItem[]> {
     const { data, error } = await this.supabase.from("shopping_card").select(`
         ingredients (
         id,
         name
-)
+),
+checked
 `);
     console.log(data);
-    return data?.map((d) => d.ingredients) as unknown as Ingredient[];
+    const items: ShoppingItem[] = data?.map((item: any) => {
+      return {
+        ingredient: item.ingredients as Ingredient,
+        checked: item.checked as Boolean,
+      } as ShoppingItem;
+    });
+    console.log(items);
+    return items;
   }
 }
 

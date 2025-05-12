@@ -1,5 +1,6 @@
 import { Recipe } from "@/types/recipe";
 import { Ingredient } from "@/types/Ingredient";
+import { ShoppingItem } from "./shoppingItem";
 
 export interface RecipesRepository {
   getRecipes(): Promise<Recipe[]>;
@@ -18,5 +19,5 @@ export interface RecipesRepository {
   // get all Ingredients to make the recipes and push it to the shopping_card table
   makeRecipes(recipes: Recipe[]): Promise<void>;
   addIngredientToCard(ingredient: Ingredient): Promise<void>;
-  getIngredientsToShop(): Promise<Ingredient[]>;
+  getIngredientsToShop(): Promise<ShoppingItem[]>;
 }
