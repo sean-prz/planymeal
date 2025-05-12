@@ -7,6 +7,8 @@ import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {SupaBaseRecipesRepository} from "@/lib/db/SupaBaseRecipesRepository";
 import {RecipesRepository} from "@/types/RecipesRepository";
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+import { SupabaseClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 interface RecipeListProps {
     recipes: Recipe[];
 }
@@ -18,7 +20,7 @@ function RecipeList({ recipes }: RecipeListProps) {
     const [recipeSelected, _setRecipeSelected] = useState<Recipe | null>(null)
     const [recipesPlanned, setRecipesPlanned] = useState<boolean[]>(recipes.map(() => false))
     const inputRef = useRef<HTMLInputElement | null>(null)
-
+    const route = useRouter()
     function setShowTextInput(state: boolean): void {
         _setShowTextInput(state)
     }
@@ -62,6 +64,13 @@ function RecipeList({ recipes }: RecipeListProps) {
         const input = event.target.value.toLowerCase()
         setRecipesVisible(recipes.filter(recipe => recipe.title.includes(input.toLowerCase())))
         if (input.length == 0) setRecipesVisible(recipes)
+    }
+    async function addPlannedRecipesToShoppingCard() {
+        const repo = await SupaBaseRecipesRepository.getInstance()
+        await repo.makeRecipes(
+            recipes.filter((_, index) => recipesPlanned[index])
+        )
+       route.push("/shopping") 
     }
 
     function setPlanned(
@@ -112,6 +121,7 @@ function RecipeList({ recipes }: RecipeListProps) {
         />
       </div>
         <div className="px-4 inline-flex text-center"
+                    onClick={() => addPlannedRecipesToShoppingCard()}
                 >{recipesPlanned.filter((it) => it).length}<br/> Selected</div>
       <p
         className="bg-gray-200 rounded-xl px-4 py-2  inline-flex cursor-pointer"
