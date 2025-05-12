@@ -16,6 +16,7 @@ function RecipeList({ recipes }: RecipeListProps) {
     const [showTextInput, _setShowTextInput] = useState(false)
     const [showAddRecipe, setShowAddRecipe] = useState(false)
     const [recipeSelected, _setRecipeSelected] = useState<Recipe | null>(null)
+    const [recipesPlanned, setRecipesPlanned] = useState<boolean[]>(recipes.map(() => false))
     const inputRef = useRef<HTMLInputElement | null>(null)
 
     function setShowTextInput(state: boolean): void {
@@ -63,6 +64,19 @@ function RecipeList({ recipes }: RecipeListProps) {
         if (input.length == 0) setRecipesVisible(recipes)
     }
 
+    function setPlanned(
+      index: number
+    ): (stat : boolean) => void {
+      return (stat: boolean) => {
+            console.log(`changing ${index} to ${stat}`)
+        setRecipesPlanned((prevRecipesPlanned) => {
+          const newRecipesPlanned = [...prevRecipesPlanned];
+          newRecipesPlanned[index] = stat;
+          return newRecipesPlanned;
+        });
+      };
+    }
+
 
     useEffect(() => {
         function handleWindowClick() {
@@ -97,6 +111,8 @@ function RecipeList({ recipes }: RecipeListProps) {
           onChange={handleChange}
         />
       </div>
+        <div className="px-4 inline-flex text-center"
+                >{recipesPlanned.filter((it) => it).length}<br/> Selected</div>
       <p
         className="bg-gray-200 rounded-xl px-4 py-2  inline-flex cursor-pointer"
         onClick={(e) => {
@@ -108,7 +124,17 @@ function RecipeList({ recipes }: RecipeListProps) {
       </p>
     </div>
             {recipesVisible.map((recipe) => (
-             <RecipeCard key={recipe.id} recipe={recipe} selected={recipe == recipeSelected} setSelected={setRecipeSelected}  setShowTextInput={setShowTextInput} setVisibility={setVisibility}></RecipeCard>
+             <RecipeCard 
+                    key={recipe.id}
+                    recipe={recipe} 
+                    selected={recipe == recipeSelected} 
+                    setSelected={setRecipeSelected}  
+                    setShowTextInput={setShowTextInput} 
+                    setVisibility={setVisibility}
+                    planned={recipesPlanned[recipes.indexOf(recipe)]}
+                    setPlanned={setPlanned(recipes.indexOf(recipe))}
+                >
+                </RecipeCard>
             ))}
             {showAddRecipe ? (<CommandPaletteInput placeholder={"Add Recipe"} showTextInput={showAddRecipe} onSubmit={submitNewRecipe}></CommandPaletteInput>) : (<div></div>)}
             {showTextInput ? (<CommandPaletteInput placeholder={"Add ingredient"} showTextInput={showTextInput} onSubmit={submitNewIngredient}></CommandPaletteInput>) : ( <div></div>)}

@@ -26,7 +26,7 @@ function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : p
                 <div
                     key={ingredient.id}
                     className="bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer"
-                    onClick={() => {route.push(`/ingredient/${ingredient.id}`)}}
+                    onClick={(e) => {e.stopPropagation();   route.push(`/ingredient/${ingredient.id}`)}}
                 >
                     {capitalizeFirstLetter(ingredient.name)}
                 </div>

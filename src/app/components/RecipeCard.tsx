@@ -11,6 +11,8 @@ interface RecipeProp {
     recipe: Recipe,
     selected: boolean,
     setSelected: (recipe: Recipe) => void,
+    planned: boolean,
+    setPlanned: (status: boolean) => void,
     setShowTextInput: (state: boolean) => void,
     setVisibility: (recipe: Recipe, visible: boolean) => void
 }
@@ -27,7 +29,7 @@ async function removeRecipe(recipe: Recipe) {
 }
 
 
-function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibility} : RecipeProp) {
+function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibility, planned, setPlanned} : RecipeProp) {
     const [ingredients, setIngredients] = useState<Ingredient[]>([])
     const router = useRouter();
     useEffect(() => {
@@ -40,7 +42,9 @@ function RecipeCard({recipe, selected, setSelected, setShowTextInput, setVisibil
     }, [selected])
 
     return (
-    <div className={RecipeCardStyle + ((selected) ? "scale-101" : "")  } >
+    <div className={((selected) ? "scale-101" : "") + ((planned) ? "border-sky-200 border-2" : "bg-white") + RecipeCardStyle  } 
+        onClick={(e)=> {   setPlanned(!planned)}}
+        >
         <div className={"flex justify-between"}>
             <h3
                 className="text-xl cursor-pointer font-semibold text-gray-800 mb-2"
