@@ -3,7 +3,6 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --color-verdure: #34D399
 }
 
 #background {
@@ -25,15 +24,42 @@ body {
 }
 
 .verdure {
-   color: green;
-   background-color: rgba(0, 128, 22, 0.4);
+  color: green;
+  background-color: rgba(0, 128, 22, 0.4);
   border: 1px solid green;
 }
 
 .viande {
- color: rgb(180,26,26);
-  background-color: rgba(180, 36, 36, 0.4)
+  color: indianred;
+  background-color: rgba(205, 92, 92, 0.35);
+  border : 1px solid indianred;
 }
 .laitier {
-  color: rgb(100, 100, 0)
+  color: darkgoldenrod;
+  background-color: rgba(255, 191, 0, 0.35);
+  border : 1px solid darkgoldenrod;
+}
+
+.epice-sauce {
+  color: rgba(139, 69, 19, 0.75);
+  background-color: rgba(210, 180, 140, 0.75);
+  border : 1px solid rgba(139, 69, 19, 0.75);
+}
+
+.surgele {
+  color: deepskyblue;
+  background-color: rgba(135, 206, 250, 0.50);
+  border : 1px solid deepskyblue;
+}
+
+.poisson {
+  color: salmon;
+  background-color: rgba(255, 160, 122, 0.40);
+  border : 1px solid salmon;
+}
+
+.cereales {
+  color: rgba(197, 147, 81, 1);
+  background-color: wheat;
+  border : 1px solid rgba(197, 147, 81, 1);
 }
