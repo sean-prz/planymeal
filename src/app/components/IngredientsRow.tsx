@@ -17,6 +17,8 @@ interface prop {
     setShowTextInput: (state: boolean) => void,
 }
 
+
+
 function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : prop) {
     const route = useRouter()
 
@@ -25,7 +27,7 @@ function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : p
             {ingredients.map((ingredient) => (
                 <div
                     key={ingredient.id}
-                    className="bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer"
+                    className={`bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer ${ingredient.type}`}
                     onClick={(e) => {e.stopPropagation();   route.push(`/ingredient/${ingredient.id}`)}}
                 >
                     {capitalizeFirstLetter(ingredient.name)}

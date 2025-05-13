@@ -1,4 +1,6 @@
-export type Ingredient =  {
-    id : number,
-    name: string
-}
+export type Ingredient = {
+  id: number;
+  name: string;
+  type?: string;
+};
+

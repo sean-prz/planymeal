@@ -210,5 +210,8 @@ checked
       .update({ checked: !shoppingItem.checked })
       .eq("ingredient_id", shoppingItem.ingredient.id);
   }
+  async removeBoughtIngredients(): Promise<void> {
+    await this.supabase.from("shopping_card").delete().eq("checked", "TRUE");
+  }
 }
 

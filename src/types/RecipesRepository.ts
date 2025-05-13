@@ -21,4 +21,5 @@ export interface RecipesRepository {
   addIngredientToCard(ingredient: Ingredient): Promise<void>;
   getIngredientsToShop(): Promise<ShoppingItem[]>;
   toggleChecked(shoppingItem: ShoppingItem): Promise<void>;
+  removeBoughtIngredients(): Promise<void>;
 }

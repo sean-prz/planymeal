@@ -9,6 +9,14 @@ import { ShoppingItem } from '@/types/shoppingItem';
 import { supabase} from '@/lib/db/SupaBaseRecipesRepository';
 function ShoppingList({}) {
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>()
+  const [showClearButton , setShowClearButton] = useState<boolean>(false)
+
+
+  useEffect(() => {
+    console.log("recomputing setShowClearButton")
+   setShowClearButton(shoppingItems ? (shoppingItems.filter(item => item.checked).length > 0)  : false)
+    console.log("to" + showClearButton)
+  }, [shoppingItems])
 
   useEffect(() => {
     async function loadIngredients() {
@@ -26,7 +34,7 @@ function ShoppingList({}) {
     }
     loadIngredients() 
 
-// Set up realtime subscription
+  // Set up realtime subscription
     const channel = supabase
       .channel('any') // You can use a specific channel name or 'any'
       .on(
@@ -61,10 +69,25 @@ function ShoppingList({}) {
     repo.toggleChecked(item)
   }
 
+  async function clearBoughtItems() {
+    const repo = await SupaBaseRecipesRepository.getInstance()
+    await repo.removeBoughtIngredients()
+  }
+
 
   return (
-  <div className="m-5">
-      <div className="text-xl font-bold">Shopping List</div>
+  <div className="m-5 flex flex-col">
+      <div className="flex align-middle ">
+        <div className="text-xl font-bold p-2 mr-5">Shopping List</div>
+        <div
+          className={`self-end text-red-300 border-red-300 bg-red-50 cursor-pointer text-center border-1 w-fit rounded-sm p-2 px-4 ${
+            showClearButton ? 'visible' : 'hidden'}`}
+
+
+          onClick={() => clearBoughtItems()}
+        >
+          Clear</div>
+      </div>
       {shoppingItems?.map((shoppingItem) => { return(
       <div key={shoppingItem.ingredient.id} className="flex items-center"> 
         <Checkbox checked={shoppingItem.checked} onClick={() => setChecked(shoppingItem)}/> <p>{shoppingItem.ingredient.name}</p>
