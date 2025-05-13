@@ -72,7 +72,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     const { data: existingTag, error: selectTagError } = await this.supabase
       .from("ingredients")
       .select("id")
-      .eq("name", ingredientName)
+      .eq("name", ingredientName.toLowerCase())
       .maybeSingle<Pick<Ingredient, "id">>(); // Use maybeSingle for 0 or 1 row
 
     if (selectTagError) {
@@ -90,7 +90,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       console.log(`Ingredient "${ingredientName}" not found, creating it...`);
       const { data: newTag, error: insertTagError } = await this.supabase
         .from("ingredients")
-        .insert({ name: ingredientName })
+        .insert({ name: ingredientName.toLowerCase() })
         .select("id") // Important: select the 'id' of the newly inserted row
         .single<Pick<Ingredient, "id">>(); // We expect a single row back
 
@@ -129,7 +129,9 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
   }
 
   async addRecipe(recipeName: string): Promise<void> {
-    await this.supabase.from("recipes").insert({ title: recipeName });
+    await this.supabase
+      .from("recipes")
+      .insert({ title: recipeName.toLowerCase() });
     return Promise.resolve(undefined);
   }
 
