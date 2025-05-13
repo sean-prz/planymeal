@@ -12,13 +12,15 @@ interface NeedsIngredient {
   // other fields like quantity, unit, etc.
 }
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
 export class SupaBaseRecipesRepository implements RecipesRepository {
   private constructor(private supabase: SupabaseClient) {}
 
   static async getInstance(): Promise<RecipesRepository> {
     if (!recipeRepositoryInstance) {
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
       const supabase = await createClient(supabaseUrl, supabaseAnonKey);
       recipeRepositoryInstance = new SupaBaseRecipesRepository(supabase);
     }
@@ -178,13 +180,18 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .insert({ ingredient_id: ingredient.id });
   }
   async getIngredientsToShop(): Promise<ShoppingItem[]> {
-    const { data, error } = await this.supabase.from("shopping_card").select(`
+    const { data, error } = await this.supabase
+      .from("shopping_card")
+      .select(
+        `
         ingredients (
         id,
         name
 ),
 checked
-`);
+`,
+      )
+      .order("ingredient_id");
     console.log(data);
     const items: ShoppingItem[] = data?.map((item: any) => {
       return {
@@ -194,6 +201,12 @@ checked
     });
     console.log(items);
     return items;
+  }
+  async toggleChecked(shoppingItem: ShoppingItem): Promise<void> {
+    await this.supabase
+      .from("shopping_card")
+      .update({ checked: !shoppingItem.checked })
+      .eq("ingredient_id", shoppingItem.ingredient.id);
   }
 }
 
