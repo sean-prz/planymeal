@@ -7,6 +7,7 @@ import { SupaBaseRecipesRepository } from '@/lib/db/SupaBaseRecipesRepository';
 import { useEffect } from 'react'; 
 import { ShoppingItem } from '@/types/shoppingItem';
 import { supabase} from '@/lib/db/SupaBaseRecipesRepository';
+import { ingredient_type } from '@/types/ingredient_types';
 function ShoppingList({}) {
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>()
   const [showClearButton , setShowClearButton] = useState<boolean>(false)
@@ -88,11 +89,31 @@ function ShoppingList({}) {
         >
           Clear</div>
       </div>
-      {shoppingItems?.map((shoppingItem) => { return(
-      <div key={shoppingItem.ingredient.id} className="flex items-center"> 
-        <Checkbox checked={shoppingItem.checked} onClick={() => setChecked(shoppingItem)}/> <p>{shoppingItem.ingredient.name}</p>
-      </div>
-      )})}
+
+
+{
+  (Object.values(ingredient_type)).map((type) => (
+    // Each group (h3 + list of items) needs a key.
+    // Use a unique property from 'type', like type.id or type.dbName.
+    <React.Fragment key={type.displayedName || type.dbName}>
+      <h3 className={"font-bold"}>{type.displayedName}</h3>
+      {shoppingItems
+        ?.filter((item) => item.ingredient.type === type.dbName) // Use strict equality
+        .map((shoppingItem) => (
+          // The key here should be unique for each shoppingItem,
+          // shoppingItem.id is usually best if available.
+          <div key={shoppingItem.ingredient.id} className="flex items-center">
+            <Checkbox
+              checked={shoppingItem.checked}
+              onClick={() => setChecked(shoppingItem)}
+            />
+            <p>{shoppingItem.ingredient.name}</p>
+          </div>
+        ))}
+    </React.Fragment>
+  ))
+}
+
   </div>
   )
 }
