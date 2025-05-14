@@ -99,7 +99,8 @@ function ShoppingList({}) {
         // Use a unique property from 'type', like type.id or type.dbName.
         return (
           <React.Fragment key={type.displayedName || type.dbName}>
-            <h3 className={"text-bold"}>{type.displayedName}</h3>
+            <h3 className={`font-bold`}>{type.displayedName}</h3>
+            <p className={type.dbName}> </p>
             {shoppingItems
               ?.filter((item) => item.ingredient.type === type.dbName) // Use strict equality
               .map((shoppingItem) => (
