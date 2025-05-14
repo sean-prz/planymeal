@@ -182,7 +182,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .insert({ ingredient_id: ingredient.id });
   }
   async getIngredientsToShop(): Promise<ShoppingItem[]> {
-    const { data, error } = await this.supabase
+    const { data, error: _ } = await this.supabase
       .from("shopping_card")
       .select(
         `
@@ -195,7 +195,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     const items: ShoppingItem[] = data!.map((item: any) => {
       return {
         ingredient: item.ingredients as Ingredient,
-        checked: item.checked as Boolean,
+        checked: item.checked as boolean,
       } as ShoppingItem;
     });
     console.log(items);
@@ -211,4 +211,3 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     await this.supabase.from("shopping_card").delete().eq("checked", "TRUE");
   }
 }
-
