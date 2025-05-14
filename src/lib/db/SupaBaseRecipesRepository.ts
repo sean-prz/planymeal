@@ -186,16 +186,13 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .from("shopping_card")
       .select(
         `
-        ingredients (
-        id,
-        name
-),
-checked
+        ingredients (*),
+        checked
 `,
       )
-      .order("ingredient_id");
+      .order("ingredients(type)");
     console.log(data);
-    const items: ShoppingItem[] = data?.map((item: any) => {
+    const items: ShoppingItem[] = data!.map((item: any) => {
       return {
         ingredient: item.ingredients as Ingredient,
         checked: item.checked as Boolean,
