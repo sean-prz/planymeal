@@ -190,7 +190,8 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
         checked
 `,
       )
-      .order("ingredients(type)");
+      .order("ingredients(type)")
+      .order("ingredients(name)");
     console.log(data);
     const items: ShoppingItem[] = data!.map((item: any) => {
       return {
