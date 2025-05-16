@@ -6,4 +6,5 @@ export const ingredient_type = {
   EPICESAUCE: { displayedName: "Epices et sauces", dbName: "epice-sauce" },
   SURGELE: { displayedName: "Surgelé", dbName: "surgele" },
   CEREALE: { displayedName: "Céréales", dbName: "cereales" },
+  AUTRE: { displayedName: "Autre", dbName: "autre" },
 };
