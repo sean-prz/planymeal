@@ -231,4 +231,17 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
   async deleteIngredient(ingredientId: Ingredient): Promise<void> {
     await this.supabase.from("ingredients").delete().eq("id", ingredientId);
   }
+  async addIngredient(ingredientName: string): Promise<Ingredient> {
+    const res = await this.supabase
+      .from("ingredients")
+      .upsert(
+        { name: ingredientName }, // The data to insert or that causes conflict
+        {
+          onConflict: "name", // The column with the UNIQUE constraint
+        },
+      )
+      .select() // Select all columns of the inserted or existing row
+      .single(); // Expect a single row to be returned
+    return res.data as Ingredient;
+  }
 }

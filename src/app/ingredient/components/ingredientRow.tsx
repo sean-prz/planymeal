@@ -8,7 +8,12 @@ import { SupaBaseRecipesRepository } from "@/lib/db/SupaBaseRecipesRepository";
 interface prop {
   ingredient: Ingredient;
 }
-
+function capitalizeFirstLetter(str: string): string {
+  if (!str) {
+    return str; // Handle empty string case
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 export default function IngredientRow(prop: prop) {
   const { ingredient } = prop;
   const [isOpen, setIsOpen] = useState(false);
@@ -48,16 +53,21 @@ export default function IngredientRow(prop: prop) {
     };
   }, [isOpen]);
   return (
-    <div className="flex justify-evenly py-2 px-4">
+    <div className="flex justify-evenly py-2 px-4 hover:scale-99">
       <div className="flex-1 px-4">
-        <p>{ingredient.name}</p>
+        <p className="font-bold">{capitalizeFirstLetter(ingredient.name)}</p>
       </div>
-      <div className="flex-1 px-4">
+      <div className="flex-1 px-4 cursor-pointer">
         <p onClick={toggleDropdown} ref={triggerRef}>
           {ingredient.type ? ingredient.type : "unspecified"}
         </p>
       </div>
-      <div onClick={() => deleteIngredient()}>x</div>
+      <div
+        className={"font-bold text-red-500 cursor-pointer"}
+        onClick={() => deleteIngredient()}
+      >
+        x
+      </div>
       {isOpen && (
         <div className="absolute">
           <DropdownMenu

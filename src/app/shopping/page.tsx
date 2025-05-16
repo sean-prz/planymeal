@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { ShoppingItem } from "@/types/shoppingItem";
 import { supabase } from "@/lib/db/SupaBaseRecipesRepository";
 import { ingredient_type } from "@/types/ingredient_types";
+import InputIngredient from "./components/inputIngredient";
 function ShoppingList({}) {
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>();
   const [showClearButton, setShowClearButton] = useState<boolean>(false);
@@ -120,6 +121,7 @@ function ShoppingList({}) {
           </React.Fragment>
         );
       })}
+      <InputIngredient />
     </div>
   );
 }
