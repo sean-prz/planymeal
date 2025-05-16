@@ -228,7 +228,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .eq("id", ingredient.id);
     return;
   }
-  async deleteIngredient(ingredientId: Ingredient): Promise<void> {
+  async deleteIngredient(ingredientId: number): Promise<void> {
     await this.supabase.from("ingredients").delete().eq("id", ingredientId);
   }
   async addIngredient(ingredientName: string): Promise<Ingredient> {
