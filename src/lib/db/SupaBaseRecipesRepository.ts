@@ -211,4 +211,21 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
   async removeBoughtIngredients(): Promise<void> {
     await this.supabase.from("shopping_card").delete().eq("checked", "TRUE");
   }
+  async getAllIngredients(): Promise<Ingredient[]> {
+    const res = await this.supabase
+      .from("ingredients")
+      .select("*")
+      .order("name");
+    return res.data as Ingredient[];
+  }
+  async updateIngredientType(
+    ingredient: Ingredient,
+    newtype: string,
+  ): Promise<void> {
+    await this.supabase
+      .from("ingredients")
+      .update({ type: newtype })
+      .eq("id", ingredient.id);
+    return;
+  }
 }
