@@ -9,13 +9,15 @@ import DropdownMenu from "./components/DropdownMenu";
 export default function IngredientPage() {
   const [ingredients, setIngredients] = useState<Ingredient[]>();
   const [options, setOptions] = useState<string[]>();
+
+  async function loadIngredients() {
+    const repo = await SupaBaseRecipesRepository.getInstance();
+    const ingredients = await repo.getAllIngredients();
+    setIngredients(ingredients);
+    return;
+  }
+
   useEffect(() => {
-    async function loadIngredients() {
-      const repo = await SupaBaseRecipesRepository.getInstance();
-      const ingredients = await repo.getAllIngredients();
-      setIngredients(ingredients);
-      return;
-    }
     loadIngredients();
   }, []);
 
@@ -26,7 +28,10 @@ export default function IngredientPage() {
       <div className="flex flex-col divide-y-1 divide-gray-100">
         {ingredients?.map((ingredient) => (
           <div key={ingredient.id}>
-            <IngredientRow ingredient={ingredient} />
+            <IngredientRow
+              loadIngredients={loadIngredients}
+              ingredient={ingredient}
+            />
           </div>
         ))}
       </div>

@@ -7,12 +7,13 @@ import React, { useState, useRef, useEffect, Ref } from "react";
 
 interface DropdownMenuProps {
   ingredient: Ingredient;
+  loadIngredients: () => Promise<void>;
   ref: Ref<HTMLDivElement>;
   toggleMenu: () => void;
 }
 
 export default function DropdownMenu(props: DropdownMenuProps) {
-  const { ingredient, ref, toggleMenu } = props;
+  const { ingredient, ref, toggleMenu, loadIngredients } = props;
 
   async function updateIngredient(key: string) {
     console.log("updating ingredinet type ");
@@ -21,6 +22,7 @@ export default function DropdownMenu(props: DropdownMenuProps) {
       await SupaBaseRecipesRepository.getInstance();
     await repo.updateIngredientType(ingredient, key);
     toggleMenu();
+    await loadIngredients();
   }
 
   return (

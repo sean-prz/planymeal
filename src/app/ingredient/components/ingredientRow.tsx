@@ -7,6 +7,7 @@ import { SupaBaseRecipesRepository } from "@/lib/db/SupaBaseRecipesRepository";
 
 interface prop {
   ingredient: Ingredient;
+  loadIngredients: () => Promise<void>;
 }
 function capitalizeFirstLetter(str: string): string {
   if (!str) {
@@ -15,7 +16,7 @@ function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 export default function IngredientRow(prop: prop) {
-  const { ingredient } = prop;
+  const { ingredient, loadIngredients } = prop;
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -23,11 +24,11 @@ export default function IngredientRow(prop: prop) {
   async function deleteIngredient() {
     const repo = await SupaBaseRecipesRepository.getInstance();
     await repo.deleteIngredient(ingredient.id);
+    loadIngredients();
   }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-    ingredient.type = "reload to see";
   };
 
   // Close the dropdown when clicking outside
@@ -72,6 +73,7 @@ export default function IngredientRow(prop: prop) {
         <div className="absolute">
           <DropdownMenu
             ingredient={ingredient}
+            loadIngredients={loadIngredients}
             ref={menuRef}
             toggleMenu={toggleDropdown}
           />
