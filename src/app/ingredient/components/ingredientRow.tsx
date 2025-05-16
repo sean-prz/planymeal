@@ -3,6 +3,7 @@
 import { Ingredient } from "@/types/Ingredient";
 import { useEffect, useRef, useState } from "react";
 import DropdownMenu from "./DropdownMenu";
+import { SupaBaseRecipesRepository } from "@/lib/db/SupaBaseRecipesRepository";
 
 interface prop {
   ingredient: Ingredient;
@@ -13,6 +14,11 @@ export default function IngredientRow(prop: prop) {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  async function deleteIngredient() {
+    const repo = await SupaBaseRecipesRepository.getInstance();
+    await repo.deleteIngredient(ingredient.id);
+  }
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -51,6 +57,7 @@ export default function IngredientRow(prop: prop) {
           {ingredient.type ? ingredient.type : "unspecified"}
         </p>
       </div>
+      <div onClick={() => deleteIngredient()}>x</div>
       {isOpen && (
         <div className="absolute">
           <DropdownMenu

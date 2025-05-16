@@ -24,4 +24,5 @@ export interface RecipesRepository {
   removeBoughtIngredients(): Promise<void>;
   getAllIngredients(): Promise<Ingredient[]>;
   updateIngredientType(ingredient: Ingredient, newtype: string): Promise<void>;
+  deleteIngredient(ingredientId: number): Promise<void>;
 }
