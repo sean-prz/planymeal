@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { Ingredient } from "@/types/Ingredient";
 import { Recipe } from "@/types/recipe";
 import { ShoppingItem } from "@/types/shoppingItem";
+import { Sanitizer } from "./Sanitizer";
 let recipeRepositoryInstance: RecipesRepository | null = null;
 
 interface NeedsIngredient {
@@ -17,7 +18,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export class SupaBaseRecipesRepository implements RecipesRepository {
-  private constructor(private supabase: SupabaseClient) {}
+  private sanitizer: Sanitizer;
+
+  private constructor(private supabase: SupabaseClient) {
+    this.sanitizer = new Sanitizer();
+  }
 
   static async getInstance(): Promise<RecipesRepository> {
     if (!recipeRepositoryInstance) {
@@ -67,12 +72,13 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
   }
 
   async addIngredientToRecipe(ingredientName: string, recipeID: number) {
+    ingredientName = this.sanitizer.sanitize(ingredientName) as string;
     console.log(`Adding ${ingredientName} to recipe ${recipeID}`);
     let ingredientID: number;
     const { data: existingTag, error: selectTagError } = await this.supabase
       .from("ingredients")
       .select("id")
-      .eq("name", ingredientName.toLowerCase())
+      .eq("name", ingredientName)
       .maybeSingle<Pick<Ingredient, "id">>(); // Use maybeSingle for 0 or 1 row
 
     if (selectTagError) {
@@ -90,7 +96,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       console.log(`Ingredient "${ingredientName}" not found, creating it...`);
       const { data: newTag, error: insertTagError } = await this.supabase
         .from("ingredients")
-        .insert({ name: ingredientName.toLowerCase() })
+        .insert({ name: ingredientName })
         .select("id") // Important: select the 'id' of the newly inserted row
         .single<Pick<Ingredient, "id">>(); // We expect a single row back
 
@@ -129,9 +135,8 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
   }
 
   async addRecipe(recipeName: string): Promise<void> {
-    await this.supabase
-      .from("recipes")
-      .insert({ title: recipeName.toLowerCase() });
+    recipeName = this.sanitizer.sanitize(recipeName) as string;
+    await this.supabase.from("recipes").insert({ title: recipeName });
     return Promise.resolve(undefined);
   }
 
@@ -222,6 +227,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     ingredient: Ingredient,
     newtype: string,
   ): Promise<void> {
+    newtype = this.sanitizer.sanitize(newtype) as string;
     await this.supabase
       .from("ingredients")
       .update({ type: newtype })
@@ -232,6 +238,7 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     await this.supabase.from("ingredients").delete().eq("id", ingredientId);
   }
   async addIngredient(ingredientName: string): Promise<Ingredient> {
+    ingredientName = this.sanitizer.sanitize(ingredientName) as string;
     const res = await this.supabase
       .from("ingredients")
       .upsert(

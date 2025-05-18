@@ -4,17 +4,13 @@ import { Ingredient } from "@/types/Ingredient";
 import { useEffect, useRef, useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 import { SupaBaseRecipesRepository } from "@/lib/db/SupaBaseRecipesRepository";
+import { capitalizeFirstLetter } from "@/lib/utils";
 
 interface prop {
   ingredient: Ingredient;
   loadIngredients: () => Promise<void>;
 }
-function capitalizeFirstLetter(str: string): string {
-  if (!str) {
-    return str; // Handle empty string case
-  }
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
+
 export default function IngredientRow(prop: prop) {
   const { ingredient, loadIngredients } = prop;
   const [isOpen, setIsOpen] = useState(false);
