@@ -9,6 +9,7 @@ import { ShoppingItem } from "@/types/shoppingItem";
 import { supabase } from "@/lib/db/SupaBaseRecipesRepository";
 import { ingredient_type } from "@/types/ingredient_types";
 import InputIngredient from "./components/inputIngredient";
+import { capitalizeFirstLetter } from "@/lib/utils";
 function ShoppingList({}) {
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>();
   const [showClearButton, setShowClearButton] = useState<boolean>(false);
@@ -115,7 +116,7 @@ function ShoppingList({}) {
                     checked={shoppingItem.checked}
                     onClick={() => setChecked(shoppingItem)}
                   />
-                  <p>{shoppingItem.ingredient.name}</p>
+                  <p>{capitalizeFirstLetter(shoppingItem.ingredient.name)}</p>
                 </div>
               ))}
           </React.Fragment>
