@@ -1,18 +1,27 @@
 "use client";
 
 import { SupaBaseRecipesRepository } from "@/lib/db/SupaBaseRecipesRepository";
+import { Ingredient } from "@/types/Ingredient";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Prop {}
 
 export default function InputIngredient(prop: Prop) {
   const inputRef = useRef<HTMLInputElement | null>(null);
-
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [topSuggestions, setTopSuggestions] = useState<string[]>([]);
   async function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    const inputValue = inputRef.current?.value || "";
+    setTopSuggestions(
+      ingredients
+        .map((ingredient) => ingredient.name)
+        .filter((suggestion) => suggestion.includes(inputValue))
+        .slice(0, 3),
+    );
+    if (inputValue.length < 2) setTopSuggestions([]);
     if (e.key == "Enter") {
       console.log("adding ingredient to ingredients");
-      const inputValue = inputRef.current?.value || "";
       const repo = await SupaBaseRecipesRepository.getInstance();
       const ingredient = await repo.addIngredient(inputValue);
       console.log(ingredient.id);
@@ -22,11 +31,18 @@ export default function InputIngredient(prop: Prop) {
     }
   }
 
+  useEffect(() => {
+    async function loadIngredients() {
+      const repo = await SupaBaseRecipesRepository.getInstance();
+      const ingredients = await repo.getAllIngredients();
+      setIngredients(ingredients);
+    }
+    loadIngredients();
+  }, []);
+
   return (
     <div className="mt-10">
       <div className="relative mr-5 w-full">
-        {" "}
-        {/* Relative for absolute positioning of icon */}
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
           <PlusCircleIcon
             className="h-5 w-5 text-gray-500"
@@ -42,6 +58,24 @@ export default function InputIngredient(prop: Prop) {
             handleKeyDown(e);
           }}
         />
+        <div
+          id="suggestionsList"
+          className="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-md bg-white shadow-lg"
+        >
+          {topSuggestions.map((item) => (
+            <div
+              className="w-full cursor-pointer p-2 text-center hover:bg-gray-100"
+              key={item}
+              onClick={(e) => {
+                e.stopPropagation();
+                inputRef!.current!.value = item;
+                inputRef!.current!.focus();
+              }}
+            >
+              {item}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
