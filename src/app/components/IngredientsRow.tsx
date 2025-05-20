@@ -1,51 +1,53 @@
-"use client"
+"use client";
 
-import {Ingredient} from "@/types/Ingredient";
-import {IngredientsRowStyle} from "@/app/components/IngredientsRow.style";
+import { Ingredient } from "@/types/Ingredient";
+import { IngredientsRowStyle } from "@/app/components/IngredientsRow.style";
 import { Recipe } from "@/types/recipe";
-import {useRouter} from "next/navigation";
-function capitalizeFirstLetter(str: string): string {
-    if (!str) {
-        return str; // Handle empty string case
-    }
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
+import { useRouter } from "next/navigation";
+import { capitalizeFirstLetter } from "@/lib/utils";
+
 interface prop {
-    ingredients: Ingredient[],
-    recipe: Recipe
-    setSelected: (recipe: Recipe) => void 
-    setShowTextInput: (state: boolean) => void,
+  ingredients: Ingredient[];
+  recipe: Recipe;
+  setSelected: (recipe: Recipe) => void;
+  setShowTextInput: (state: boolean) => void;
 }
 
+function IngredientsRow({
+  ingredients,
+  setShowTextInput,
+  recipe,
+  setSelected,
+}: prop) {
+  const route = useRouter();
 
-
-function IngredientsRow({ingredients, setShowTextInput, recipe, setSelected} : prop) {
-    const route = useRouter()
-
-    return (
-        <div className="flex flex-row flex-wrap gap-2">
-            {ingredients.map((ingredient) => (
-                <div
-                    key={ingredient.id}
-                    className={`bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer ${ingredient.type}`}
-                    onClick={(e) => {e.stopPropagation();   route.push(`/ingredient/${ingredient.id}`)}}
-                >
-                    {capitalizeFirstLetter(ingredient.name)}
-                </div>
-            ))}
-            <div>
-                <div
-                    className={IngredientsRowStyle}
-                    onClick={(e) =>  {e.stopPropagation(); setShowTextInput(true); setSelected(recipe)}}
-                >
-                    +
-                </div>
-
-            </div>
-
+  return (
+    <div className="flex flex-row flex-wrap gap-2">
+      {ingredients.map((ingredient) => (
+        <div
+          key={ingredient.id}
+          className={`bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer ${ingredient.type}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            route.push(`/ingredient/${ingredient.id}`);
+          }}
+        >
+          {capitalizeFirstLetter(ingredient.name)}
         </div>
-    )
-
-
+      ))}
+      <div>
+        <div
+          className={IngredientsRowStyle}
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowTextInput(true);
+            setSelected(recipe);
+          }}
+        >
+          +
+        </div>
+      </div>
+    </div>
+  );
 }
 export default IngredientsRow;
