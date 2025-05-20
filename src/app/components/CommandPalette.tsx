@@ -41,23 +41,43 @@ function CommandPaletteInput({
   return (
     <div
       id="background"
-      className="fixed flex-col backdrop-blur-xs inset-0 items-center justify-center "
+      className="fixed inset-0 flex items-center justify-center backdrop-blur-xs"
       style={{ pointerEvents: "none" }}
     >
-      <div id="container" className="flex-col flex w-96 items-center">
+      <div
+        id="paletteContainer"
+        className="relative w-96" // Width defined here, relative for positioning children
+        style={{ pointerEvents: "auto" }}
+      >
         <input
           ref={inputRef}
           type="text"
           placeholder={placeholder}
-          className={commandPaletteStyle}
+          className={`${commandPaletteStyle} w-full`} // Input takes full width
           onKeyDown={handleKeyDown}
         />
-        <div className="h-2"></div>
-        {topSuggestions.map((item) => (
-          <div className="bg-white w-full text-center" key={item}>
-            {item}
+
+        {/* Suggestions are positioned absolutely, appearing below the input */}
+        {topSuggestions.length > 0 && (
+          <div
+            id="suggestionsList"
+            className="absolute top-full left-0 z-10 mt-2 w-full overflow-hidden rounded-md bg-white shadow-lg"
+          >
+            {topSuggestions.map((item) => (
+              <div
+                className="w-full cursor-pointer p-2 text-center hover:bg-gray-100"
+                key={item}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  inputRef!.current!.value = item;
+                  inputRef!.current!.focus();
+                }}
+              >
+                {item}
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );
