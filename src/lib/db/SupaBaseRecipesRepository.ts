@@ -251,4 +251,11 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
       .single(); // Expect a single row to be returned
     return res.data as Ingredient;
   }
+  async getIngredientsInStock(): Promise<Ingredient[]> {
+    const res = await this.supabase.from("pantry").select("ingredients(*)");
+    const ingredients: Ingredient[] = res.data!.map((item: any) => {
+      return item.ingredients as Ingredient;
+    });
+    return ingredients;
+  }
 }

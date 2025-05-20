@@ -78,12 +78,35 @@ function ShoppingList({}) {
     await repo.removeBoughtIngredients();
   }
 
+  async function checkPantry() {
+    const repo = await SupaBaseRecipesRepository.getInstance();
+    const pantries: Ingredient[] = await repo.getIngredientsInStock();
+    const ids = pantries.map((ingredient) => ingredient.id);
+    console.log(pantries);
+    shoppingItems?.forEach((item) => {
+      if (ids.indexOf(item.ingredient.id) != -1) {
+        setChecked(item);
+      }
+    });
+  }
+
   return (
     <div className="m-5 flex flex-col">
       <div className="flex align-middle ">
         <div className="text-xl font-bold p-2 mr-5">Shopping List</div>
+
         <div
-          className={`self-end text-red-300 border-red-300 bg-red-50 cursor-pointer text-center border-1 w-fit rounded-sm p-2 px-4 ${
+          className={`self-end mr-5 text-amber-500 border-amber-300 bg-red-50 cursor-pointer text-center border-1 w-fit rounded-sm p-2 px-4 $`}
+          onClick={() => {
+            console.log("checking pantry be patien pls");
+            checkPantry();
+            return;
+          }}
+        >
+          Check Pantry
+        </div>
+        <div
+          className={`self-end text-red-300 mr-5 border-red-300 bg-red-50 cursor-pointer text-center border-1 w-fit rounded-sm p-2 px-4 ${
             showClearButton ? "visible" : "hidden"
           }`}
           onClick={() => clearBoughtItems()}
