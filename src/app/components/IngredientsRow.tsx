@@ -3,7 +3,6 @@
 import { Ingredient } from "@/types/Ingredient";
 import { IngredientsRowStyle } from "@/app/components/IngredientsRow.style";
 import { Recipe } from "@/types/recipe";
-import { useRouter } from "next/navigation";
 import { capitalizeFirstLetter } from "@/lib/utils";
 
 interface prop {
@@ -19,7 +18,11 @@ function IngredientsRow({
   recipe,
   setSelected,
 }: prop) {
-  const route = useRouter();
+  ingredients.sort((a, b) => {
+    let atype = a.type ? a.type : "";
+    let btype = b.type ? b.type : "";
+    return btype.localeCompare(atype);
+  });
 
   return (
     <div className="flex flex-row flex-wrap gap-2">
@@ -27,10 +30,6 @@ function IngredientsRow({
         <div
           key={ingredient.id}
           className={`bg-gray-100 border-gray-200 border-1 rounded-full px-4 py-2 font-semibold text-sm cursor-pointer ${ingredient.type}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            route.push(`/ingredient/${ingredient.id}`);
-          }}
         >
           {capitalizeFirstLetter(ingredient.name)}
         </div>
