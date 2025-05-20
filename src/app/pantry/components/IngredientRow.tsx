@@ -22,11 +22,11 @@ export default function IngredientRow(prop: prop) {
   return (
     <div className="flex justify-evenly py-2 px-4 hover:scale-99">
       <div className="flex-1 px-4">
-        <p className="font-bold">{capitalizeFirstLetter(ingredient.name)}</p>
+        <p className="font-thin">{capitalizeFirstLetter(ingredient.name)}</p>
       </div>
 
       <div
-        className={"font-bold text-red-500 cursor-pointer"}
+        className={"font-bold text-red-500  px-4 cursor-pointer"}
         onClick={deleteIngredient}
       >
         x

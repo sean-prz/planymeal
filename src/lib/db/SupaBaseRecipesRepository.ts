@@ -252,7 +252,10 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     return res.data as Ingredient;
   }
   async getIngredientsInStock(): Promise<Ingredient[]> {
-    const res = await this.supabase.from("pantry").select("ingredients(*)");
+    const res = await this.supabase
+      .from("pantry")
+      .select("ingredients(*)")
+      .order("ingredients(name)");
     const ingredients: Ingredient[] = res.data!.map((item: any) => {
       return item.ingredients as Ingredient;
     });

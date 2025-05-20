@@ -27,22 +27,25 @@ export default function PantryPage() {
   }, [refresh]);
 
   return (
-    <div className="m-5">
-      welcome to the pantry
+    <div className="m-10">
+      <div className="font-bold text-xl">Add To The Pantry</div>
       <InputIngredient onSubmit={addToPantry} />
-      <div className="flex-col flex">
-        {ingredients.map((ingredient) => {
-          return (
-            <IngredientsRow
-              key={ingredient.id}
-              ingredient={ingredient}
-              loadIngredients={() => {
-                setRefresh((prevRefresh) => prevRefresh + 1);
-                return Promise.resolve();
-              }}
-            />
-          );
-        })}
+      <div className="mt-10 font-bold text-xl">Currently In Stock</div>
+      <div className="flex w-full justify-center">
+        <div className=" flex-col flex divide-y-1 divide-gray-200 w-96 md:w-2/3">
+          {ingredients.map((ingredient) => {
+            return (
+              <IngredientsRow
+                key={ingredient.id}
+                ingredient={ingredient}
+                loadIngredients={() => {
+                  setRefresh((prevRefresh) => prevRefresh + 1);
+                  return Promise.resolve();
+                }}
+              />
+            );
+          })}
+        </div>
       </div>
     </div>
   );
