@@ -5,9 +5,12 @@ import { Ingredient } from "@/types/Ingredient";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 
-interface Prop {}
+interface Prop {
+  onSubmit: (input: string) => Promise<void>;
+}
 
 export default function InputIngredient(prop: Prop) {
+  const { onSubmit } = prop;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [topSuggestions, setTopSuggestions] = useState<string[]>([]);
@@ -21,13 +24,9 @@ export default function InputIngredient(prop: Prop) {
     );
     if (inputValue.length < 2) setTopSuggestions([]);
     if (e.key == "Enter") {
-      console.log("adding ingredient to ingredients");
-      const repo = await SupaBaseRecipesRepository.getInstance();
-      const ingredient = await repo.addIngredient(inputValue);
-      console.log(ingredient.id);
-      await repo.addIngredientToCard(ingredient);
-      // clear input
+      onSubmit(inputValue); // clear input
       inputRef.current!.value = "";
+      setTopSuggestions([]);
     }
   }
 

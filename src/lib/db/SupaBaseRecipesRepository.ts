@@ -258,4 +258,14 @@ export class SupaBaseRecipesRepository implements RecipesRepository {
     });
     return ingredients;
   }
+  async addIngredientToPantry(ingredientName: string): Promise<void> {
+    const ingredient: Ingredient = await this.addIngredient(ingredientName);
+    await this.supabase.from("pantry").insert({ ingredient_id: ingredient.id });
+  }
+  async removeIngredientFromPantry(ingrrdientID: number): Promise<void> {
+    await this.supabase
+      .from("pantry")
+      .delete()
+      .eq("ingredient_id", ingrrdientID);
+  }
 }

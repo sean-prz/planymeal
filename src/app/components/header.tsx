@@ -33,6 +33,12 @@ const Header = () => {
       >
         Ingredient List
       </div>
+      <div
+        className="flex-1 text-center cursor-pointer underline flex justify-center items-center"
+        onClick={() => route.push("/pantry")}
+      >
+        Pantry
+      </div>
     </header>
   );
 };

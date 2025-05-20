@@ -27,4 +27,6 @@ export interface RecipesRepository {
   deleteIngredient(ingredientId: number): Promise<void>;
   addIngredient(ingredientName: string): Promise<Ingredient>;
   getIngredientsInStock(): Promise<Ingredient[]>;
+  addIngredientToPantry(ingredientName: string): Promise<void>;
+  removeIngredientFromPantry(ingrrdientID: number): Promise<void>;
 }

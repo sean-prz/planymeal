@@ -90,6 +90,14 @@ function ShoppingList({}) {
     });
   }
 
+  async function addIngredientToCart(ingredientName: string) {
+    console.log("adding ingredient to ingredients");
+    const repo = await SupaBaseRecipesRepository.getInstance();
+    const ingredient = await repo.addIngredient(ingredientName);
+    console.log(ingredient.id);
+    await repo.addIngredientToCard(ingredient);
+  }
+
   return (
     <div className="m-5 flex flex-col">
       <div className="flex align-middle ">
@@ -145,7 +153,7 @@ function ShoppingList({}) {
           </React.Fragment>
         );
       })}
-      <InputIngredient />
+      <InputIngredient onSubmit={addIngredientToCart} />
     </div>
   );
 }
